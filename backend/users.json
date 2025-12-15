@@ -1,0 +1,13 @@
+[
+  {
+    "id": "1765769512812",
+    "email": "pallechandana21@gmail.com",
+    "password": "$2b$12$l5itMrU6sgNtfPKwC6/tYOVz4vCXquW/OmD7J4drsNFijnLf8Isqy",
+    "firstName": "Palle",
+    "lastName": "Chandana",
+    "role": "intern",
+    "isActive": true,
+    "createdAt": "2025-12-15T03:31:52.812Z",
+    "lastLogin": null
+  }
+]
