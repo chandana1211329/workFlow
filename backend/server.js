@@ -25,7 +25,7 @@ mongoose.connect(process.env.MONGODB_URI || 'mongodb://localhost:27017/document-
 
 // Middleware
 app.use(cors({
-  origin: ['https://document-generator-frontend.onrender.com', 'https://document-generator-zxmq.onrender.com'],
+  origin: ['https://workflow-dljb.onrender.com', 'https://document-generator-frontend.onrender.com', 'https://document-generator-zxmq.onrender.com'],
   credentials: true
 }));
 app.use(express.json({ limit: '10mb' }));
