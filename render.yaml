@@ -3,8 +3,8 @@ services:
     name: document-generator
     env: node
     plan: free
-    buildCommand: npm install
-    startCommand: npm start
+    buildCommand: cd backend && npm install
+    startCommand: cd backend && npm start
     envVars:
       - key: NODE_ENV
         value: production
@@ -13,13 +13,17 @@ services:
         value: mongodb://localhost:27017/document-generator
       - key: JWT_SECRET
         sync: false
+        value: your-production-jwt-secret-change-this
       - key: JWT_EXPIRES_IN
         value: 24h
       - key: SMTP_USER
         sync: false
+        value: your-email@gmail.com
       - key: SMTP_PASS
         sync: false
+        value: your-app-password
       - key: MANAGER_EMAIL
         sync: false
+        value: manager@yourcompany.com
       - key: PORT
         value: 10000

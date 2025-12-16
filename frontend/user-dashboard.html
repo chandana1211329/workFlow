@@ -1,0 +1,173 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>User Dashboard - Document Generator</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+    <!-- Navigation -->
+    <nav class="navbar">
+        <div class="nav-container">
+            <div class="logo">
+                <img src="assets/default-logo.png" alt="Company Logo" class="logo-img">
+                <span class="company-name">WorkFlow Pro</span>
+            </div>
+            <div class="nav-links">
+                <a href="#form" class="active">Generate Document</a>
+                <a href="#" id="logoutBtn">
+                    <i class="fas fa-sign-out-alt"></i> Logout
+                </a>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Welcome Section -->
+    <section class="welcome-section">
+        <div class="container">
+            <div class="welcome-content">
+                <h1>Welcome back, <span class="user-name">User</span>!</h1>
+                <p>Create your daily work summary document in just a few steps.</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- Form Section -->
+    <section class="form-section" id="form">
+        <div class="container">
+            <h2 class="section-title">Daily Work Summary Form</h2>
+            <p class="section-subtitle">Fill out the form below to generate your professional work summary document</p>
+            
+            <div class="form-card">
+                <form id="workSummaryForm">
+                    <div class="form-grid">
+                        <div class="form-group">
+                            <label for="internName">
+                                <i class="fas fa-user"></i> Your Full Name <span class="required">*</span>
+                            </label>
+                            <input type="text" id="internName" placeholder="John Doe" required>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="date">
+                                <i class="far fa-calendar-alt"></i> Date <span class="required">*</span>
+                            </label>
+                            <input type="date" id="date" required>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="taskTitle">
+                                <i class="fas fa-tasks"></i> Task/Project Title <span class="required">*</span>
+                            </label>
+                            <input type="text" id="taskTitle" placeholder="e.g., Dashboard Implementation" required>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="companyName">
+                                <i class="fas fa-building"></i> Company/Organization <span class="required">*</span>
+                            </label>
+                            <input type="text" id="companyName" placeholder="e.g., Tech Solutions Inc." required>
+                        </div>
+                        
+                        <div class="form-group full-width">
+                            <label for="introduction">
+                                <i class="fas fa-paragraph"></i> Introduction/Overview <span class="required">*</span>
+                            </label>
+                            <textarea id="introduction" rows="3" placeholder="Briefly describe what you worked on..." required></textarea>
+                        </div>
+                        
+                        <div class="form-group full-width">
+                            <label for="topicsCovered">
+                                <i class="fas fa-list-ul"></i> Topics Covered (One per line) <span class="required">*</span>
+                            </label>
+                            <textarea id="topicsCovered" rows="5" placeholder="Enter each topic on a new line..." required></textarea>
+                        </div>
+                        
+                        <div class="form-group full-width">
+                            <label for="practiceExamples">
+                                <i class="fas fa-code"></i> Practice & Examples <span class="required">*</span>
+                            </label>
+                            <textarea id="practiceExamples" rows="5" placeholder="Describe any code examples or practical work you did..." required></textarea>
+                        </div>
+                        
+                        <div class="form-group full-width">
+                            <label>
+                                <i class="fas fa-image"></i> Screenshot (Optional)
+                            </label>
+                            <div class="upload-area" id="uploadArea">
+                                <input type="file" id="screenshotUpload" accept="image/*" style="display: none;">
+                                <i class="fas fa-cloud-upload-alt"></i>
+                                <p>Drag & drop your screenshot here or click to browse</p>
+                                <small>Supports JPG, PNG (Max 5MB)</small>
+                            </div>
+                            <div id="previewContainer" class="preview-container"></div>
+                        </div>
+                    </div>
+                    
+                    <div class="form-actions">
+                        <button type="button" id="previewBtn" class="btn btn-outline">
+                            <i class="far fa-eye"></i> Preview
+                        </button>
+                        <button type="submit" id="generateBtn" class="btn btn-primary">
+                            <i class="fas fa-file-pdf"></i> Generate & Download
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </section>
+
+    <!-- Preview Modal -->
+    <div id="previewModal" class="modal">
+        <div class="modal-content">
+            <span class="close-modal">&times;</span>
+            <div id="documentPreview" class="document-preview"></div>
+            <div class="modal-actions">
+                <button id="closePreview" class="btn btn-outline">Close</button>
+                <button id="downloadFromPreview" class="btn btn-primary">
+                    <i class="fas fa-download"></i> Download
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Toast Notification -->
+    <div id="toast" class="toast"></div>
+
+    <script src="auth.js"></script>
+    <script src="user-script.js"></script>
+    <script>
+        // Protect route and initialize user data
+        document.addEventListener('DOMContentLoaded', function() {
+            console.log('=== USER DASHBOARD LOADED ===');
+            console.log('Form element:', document.getElementById('workSummaryForm'));
+            console.log('Generate button:', document.getElementById('generateBtn'));
+            console.log('Preview button:', document.getElementById('previewBtn'));
+            
+            // Protect route - only allow authenticated interns
+            if (!auth.protectRoute('intern')) {
+                return;
+            }
+            
+            // Update user profile display
+            auth.updateUserProfile();
+            
+            // Pre-fill user name in form
+            const user = auth.getCurrentUser();
+            const internNameInput = document.getElementById('internName');
+            if (internNameInput && user.fullName) {
+                internNameInput.value = user.fullName;
+                internNameInput.readOnly = true; // Make it read-only since it's from authenticated user
+            }
+        });
+        
+        // Update logout functionality
+        document.getElementById('logoutBtn').addEventListener('click', function(e) {
+            e.preventDefault();
+            auth.logout();
+        });
+    </script>
+</body>
+</html>

@@ -24,9 +24,36 @@ mongoose.connect(process.env.MONGODB_URI || 'mongodb://localhost:27017/document-
 .catch(err => console.error('MongoDB connection error:', err));
 
 // Middleware
-app.use(cors());
+app.use(cors({
+  origin: ['https://document-generator-frontend.onrender.com', 'https://document-generator-zxmq.onrender.com'],
+  credentials: true
+}));
 app.use(express.json({ limit: '10mb' }));
 app.use(express.urlencoded({ extended: true, limit: '10mb' }));
+
+// Serve static files from frontend directory FIRST (before routes)
+app.use(express.static(path.join(__dirname, '../frontend')));
+
+// Specific routes for HTML files
+app.get('/user-login.html', (req, res) => {
+    res.sendFile(path.join(__dirname, '../frontend/user-login.html'));
+});
+
+app.get('/admin-login.html', (req, res) => {
+    res.sendFile(path.join(__dirname, '../frontend/admin-login.html'));
+});
+
+app.get('/register.html', (req, res) => {
+    res.sendFile(path.join(__dirname, '../frontend/register.html'));
+});
+
+app.get('/user-dashboard.html', (req, res) => {
+    res.sendFile(path.join(__dirname, '../frontend/user-dashboard.html'));
+});
+
+app.get('/admin-dashboard.html', (req, res) => {
+    res.sendFile(path.join(__dirname, '../frontend/admin-dashboard.html'));
+});
 
 app.get('/home', (req, res) => {
     res.type('html').send(`<!DOCTYPE html>
@@ -82,9 +109,6 @@ app.get('/home', (req, res) => {
 app.get('/', (req, res) => {
     res.redirect('/home');
 });
-
-// Serve static files from frontend directory
-app.use(express.static(path.join(__dirname, '../frontend'), { index: false }));
 
 // Create necessary directories
 const directories = ['uploads', 'generated_docs'];

@@ -1,6 +1,6 @@
 {
   "name": "document-generator-backend",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "Backend for Document Generator System",
   "main": "server.js",
   "scripts": {
